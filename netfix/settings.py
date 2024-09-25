@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'users'
 ]
 
+LOGIN_URL = 'login/'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -78,6 +80,8 @@ WSGI_APPLICATION = 'netfix.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 DATABASES = {
     'default': {
