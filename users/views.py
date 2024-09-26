@@ -25,7 +25,7 @@ class CustomerSignUpView(CreateView):
     def form_valid(self, form):
         user = form.save()
         login(self.request, user) #login user automatically
-        return redirect('customer-profile') 
+        return redirect('users:customer-profile') 
 
 
 class CompanySignUpView(CreateView):
@@ -40,7 +40,7 @@ class CompanySignUpView(CreateView):
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
-        return redirect('company-profile') 
+        return redirect('users:company-profile') 
 
 
 def LoginUserView(request):
@@ -48,19 +48,19 @@ def LoginUserView(request):
         form = UserLoginForm(request.POST)
         if form.is_valid():
             # Authenticate the user
-            email = form.cleaned_data.get('email')
+            username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
-            user = authenticate(request, email=email, password=password)
+            user = authenticate(request, username=username, password=password)
 
             if user is not None:
                 login(request, user)  # Log the user in
                 # Redirect based on user type
                 if user.is_customer:
-                    return redirect('customer-profile')  # Redirect to customer profile
+                    return redirect('users:customer-profile')  # Redirect to customer profile
                 elif user.is_company:
-                    return redirect('company-profile')  # Redirect to company profile
+                    return redirect('users:company-profile')  # Redirect to company profile
                 else:
-                    return redirect('/')  # Fallback to homepage
+                    return redirect('home')  # Fallback to homepage
             else:
                 messages.error(request, 'Invalid email or password.')
     else:

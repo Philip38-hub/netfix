@@ -16,14 +16,20 @@ Including another URLconf
 # from django.conf.urls import path
 from django.contrib import admin
 from django.urls import include, path
-
+# from debug_toolbar import debug_toolbar_urls
+import debug_toolbar
 from . import views as v
+from users import views as b
 
 urlpatterns = [
+    path('__debug__/', include(debug_toolbar.urls)),
     path('admin/', admin.site.urls),
     path('', include('main.urls')),
     path('services/', include('services.urls')),
-    path('register/', include('users.urls')),
-    path('customer/<slug:name>', v.customer_profile, name='customer_profile'),
-    path('company/<slug:name>', v.company_profile, name='company_profile')
-]
+    # path('register/', include('users.urls')),
+    # path('login/', b.LoginUserView, name='login'),
+    path('users/', include('users.urls')),
+    # path('customer/<slug:name>', v.customer_profile, name='customer_profile'),
+    # path('company/<slug:name>', v.company_profile, name='company_profile')
+] 
+# + debug_toolbar_urls

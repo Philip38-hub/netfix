@@ -76,21 +76,21 @@ class CompanySignUpForm(UserCreationForm):
         return user
 
 class UserLoginForm(forms.Form):
-    email = forms.EmailField(
-        widget=forms.TextInput(attrs={'placeholder': 'Enter Email', 'autocomplete': 'off'})
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': 'Enter Username', 'autocomplete': 'on'})
     )
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'placeholder': 'Enter Password'})
     )
 
     def clean(self):
-        email = self.cleaned_data.get('email')
+        username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
 
         # Check if both email and password were provided
-        if email and password:
+        if username and password:
             # Authenticate the user
-            user = authenticate(email=email, password=password)
+            user = authenticate(username=username, password=password)
             if user is None:
                 raise forms.ValidationError("Invalid email or password.")
         
