@@ -56,9 +56,9 @@ def LoginUserView(request):
                 login(request, user)  # Log the user in
                 # Redirect based on user type
                 if user.is_customer:
-                    return redirect('users:customer-profile')  # Redirect to customer profile
+                    return redirect('users:customer-profile', username=user.username)  # Redirect to customer profile
                 elif user.is_company:
-                    return redirect('users:company-profile')  # Redirect to company profile
+                    return redirect('users:company-profile', username=user.username)  # Redirect to company profile
                 else:
                     return redirect('home')  # Fallback to homepage
             else:
@@ -70,7 +70,7 @@ def LoginUserView(request):
 
 # Customer Profile View - Only accessible to logged-in users
 @login_required
-def CustomerProfileView(request):
+def CustomerProfileView(request, username):
     customer = Customer.objects.get(user=request.user)
     user_age = timezone.now().year - customer.birth.year
 
@@ -83,7 +83,7 @@ def CustomerProfileView(request):
 
 # Company Profile View - Only accessible to logged-in users
 @login_required
-def CompanyProfileView(request):
+def CompanyProfileView(request, username):
     company = Company.objects.get(user=request.user)
 
     return render(request, 'users/profile.html', {

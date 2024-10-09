@@ -1,6 +1,6 @@
 <nav class="navbar">
     <ul>
-        <li><a href="">Home</a></li>
+        <li><a href="/">Home</a></li>
         <li>
             <a href="/services/">Services</a>
             <ul>
@@ -17,9 +17,19 @@
                 <li><a href="/services/water-heaters">Water Heaters</a></li>
             </ul>
         </li>
-        <!-- <li><a href="/company/{{ request.user.username }}">Profile</a></li> -->
-        <li><a href="{% url 'users:login' %}">Login</a></li>
-        <li><a href="{% url 'users:register' %}">Register</a></li>
+        {% if user.is_authenticated %}
+            {% if user.is_customer %}
+               <li><a href="{% url 'users:customer-profile' request.user.username %}">Profile</a></li>
+            {% else %}
+                <li><a href="/company/{{ request.user.username }}">Profile</a></li>
+            {% endif %}
+        {% endif %}
+        {% if user.is_authenticated %}
+            <li><a href="{% url 'main:logout' %}">Logout</a></li>
+        {% else %}
+         <li><a href="{% url 'users:login' %}">Login</a></li>
+         <li><a href="{% url 'users:register' %}">Register</a></li>
+        {% endif %}
     </ul>
 </nav>
 

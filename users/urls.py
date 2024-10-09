@@ -11,6 +11,8 @@ urlpatterns = [
     path('company/', v.CompanySignUpView.as_view(), name='register_company'),
     path('customer/', v.CustomerSignUpView.as_view(), name='register_customer'),
     path('login/', v.LoginUserView, name='login'),
-    path('profile/company/', v.CompanyProfileView, name='company-profile'), 
-    path('profile/customer/', v.CustomerProfileView, name='customer-profile')
+    # path('profile/company/', v.CompanyProfileView, name='company-profile'), 
+    # path('profile/customer/', v.CustomerProfileView, name='customer-profile')
+    path('company/<slug:username>/', v.CompanyProfileView, name='company-profile'), 
+    path('customer/<slug:username>/', v.CustomerProfileView, name='customer-profile')
 ]
