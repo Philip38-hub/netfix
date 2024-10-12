@@ -1,5 +1,5 @@
 <nav class="navbar">
-    <ul>
+    <ul class="left-nav">
         <li><a href="/">Home</a></li>
         <li>
             <a href="/services/">Services</a>
@@ -21,9 +21,12 @@
             {% if user.is_customer %}
                <li><a href="{% url 'users:customer-profile' request.user.username %}">Profile</a></li>
             {% else %}
-                <li><a href="/company/{{ request.user.username }}">Profile</a></li>
+                <li><a href="{% url 'users:company-profile' request.user.username %}">Profile</a></li>
             {% endif %}
         {% endif %}
+    </ul>
+    <ul class="right-nav">
+        
         {% if user.is_authenticated %}
             <li><a href="{% url 'main:logout' %}">Logout</a></li>
         {% else %}

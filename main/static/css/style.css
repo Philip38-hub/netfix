@@ -108,16 +108,31 @@ button:hover {
   width: 95%;
   margin: 0 auto;
   margin-bottom: 30px;
+  display:flex;
+  /* justify-content: flex-start; */
+  align-items: center;
+  padding: 0 30px;
 }
 
 .navbar ul {
-  position: relative;
+  /* position: relative; */
   display: flex;
-  flex: 1 1 auto;
+  /* flex: 1 1 auto; */
   margin: 0;
   padding: 0 30px;
   list-style-type: none;
 }
+
+.navbar ul.left-nav {
+  flex: 1;
+  justify-content: flex-start;
+}
+
+.navbar ul.right-nav {
+  display : flex;
+  justify-content: flex-end;
+}
+
 .navbar ul li:not(:last-child) {
   margin-right: 40px;
 }
@@ -171,11 +186,11 @@ button:hover {
   color: #f9f8fd;
 }
 
-.last_navbar {
+/* .last_navbar {
   right: 0;
   position: absolute;
   margin-right: 20px;
-}
+} */
 
 /* ============================================================================================== */
 
