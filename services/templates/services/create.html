@@ -1,0 +1,16 @@
+{% extends 'main/base.html' %}
+{% block title %}
+    Create New Service
+{% endblock %}
+
+{% block content %}
+    <h2>Create a New Service</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{form}}
+        <span class="helptext">Choose Field Above</span>
+        <button type="submit">Create Service</button>
+    </form>
+
+{% endblock %}

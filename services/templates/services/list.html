@@ -5,14 +5,28 @@
 {% block content %}
     <p class="title">Services</p>
     {% if user.is_company %}
-        <a class="create_service" href="/services/create"> Create Service</a>
+        <a class="create_service" href="{% url 'services_create' %}"> Create Service</a>
     {% endif %}
-    <div class='services_list'>
+    <!-- <div class='services_list'>
         {% if services %}
             {% for service in services.all %}
             {% endfor %}
         {% else %}
             <h2>Sorry No services available yet</h2>
         {% endif %}
-     </div>
+     </div> -->
+     <div class="services_list">
+        {% if services %}
+            {% for service in services %}
+                <div>
+                    <h3>{{ service.name }}</h3>
+                    <p>{{ service.description }}</p>
+                    <p>Price per Hour: {{ service.price_hour }}</p>
+                    <p>Field: {{ service.field }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h2>No services available yet</h2>
+        {% endif %}
+    </div>
 {% endblock %}

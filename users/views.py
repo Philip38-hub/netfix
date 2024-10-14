@@ -7,6 +7,7 @@ from django.utils import timezone
 
 from .forms import CustomerSignUpForm, CompanySignUpForm, UserLoginForm
 from .models import User, Company, Customer
+from services.models import ServiceRequest
 
 
 def register(request):
@@ -73,11 +74,12 @@ def LoginUserView(request):
 def CustomerProfileView(request, username):
     customer = Customer.objects.get(user=request.user)
     user_age = timezone.now().year - customer.birth.year
+    requested_services = ServiceRequest.objects.filter(customer=customer).order_by('-request_date')
 
     return render(request, 'users/profile.html', {
         'user': request.user,
         'user_age': user_age,
-        'sh': []  # Placeholder for requested services history
+        'sh': requested_services  # Placeholder for requested services history
     })
 
 

@@ -24,4 +24,5 @@ class CreateNewService(forms.Form):
 
 
 class RequestServiceForm(forms.Form):
-    pass
+    address = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'placeholder': 'Enter address'}))
+    service_hours = forms.IntegerField(min_value=1, widget=forms.NumberInput(attrs={'placeholder': 'Enter service hours'}))
