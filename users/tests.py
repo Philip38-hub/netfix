@@ -1,61 +1,57 @@
-# from django.test import TestCase, override_settings
-# from django.urls import reverse
-# from django.contrib.auth import get_user_model
-# from .models import Customer, Company
+from django.test import TestCase
+from django.urls import reverse
+from django.contrib.auth import get_user_model
+from users.models import Company, Customer
+from django.contrib.auth.models import User
 
+User = get_user_model()
 
-# User = get_user_model()
-# @override_settings(CSRF_COOKIE_HTTPONLY=False)
-# class UserTests(TestCase):
+class UserTests(TestCase):
+    
+    def setUp(self):
+        # Create customer user
+        self.customer_user = User.objects.create_user(
+            username="customer1", password="testpass123", email="customer1@example.com", is_customer=True
+        )
+        Customer.objects.create(user=self.customer_user, birth="1990-01-01")
 
-#     def setUp(self):
-#         # Setup test data for customer and company registration
-#         self.customer_data = {
-#             'username': 'customer1',
-#             'email': 'customer1@example.com',
-#             'password1': 'Testpassword123',
-#             'password2': 'Testpassword123',
-#             'date_of_birth': '1990-01-01'
-#         }
+        # Create company user
+        self.company_user = User.objects.create_user(
+            username="company1", password="testpass123", email="company1@example.com", is_company=True
+        )
+        Company.objects.create(user=self.company_user, field="Gardening")
 
-#         self.company_data = {
-#             'username': 'company1',
-#             'email': 'company1@example.com',
-#             'password1': 'Testpassword123',
-#             'password2': 'Testpassword123',
-#             'field': 'Carpentry'
-#         }
+    def test_company_registration(self):
+        response = self.client.post(reverse("users:register_company"), {
+            "username": "newcompany",
+            "password1": "companypass123",
+            "password2": "companypass123",
+            "email": "newcompany@example.com",
+            "field": "Gardening"
+        })
+        self.assertEqual(response.status_code, 302)  # Successful registration should redirect
+        self.assertTrue(User.objects.filter(username="newcompany").exists())
 
-#     def test_customer_registration(self):
-#         response = self.client.post(reverse('register_customer'), self.customer_data)
-#         self.assertEqual(response.status_code, 302)  # Successful registration should redirect to profile
-#         customer = User.objects.get(username='customer1')
-#         self.assertTrue(customer.is_customer)
+    def test_customer_login(self):
+        login = self.client.login(username="customer1", password="testpass123")
+        self.assertTrue(login)
+        response = self.client.get(reverse("users:customer-profile", kwargs={"username": "customer1"}))
+        self.assertEqual(response.status_code, 200)
 
-#     def test_company_registration(self):
-#         response = self.client.post(reverse('register_company'), self.company_data)
-#         self.assertEqual(response.status_code, 302)  # Successful registration should redirect to profile
-#         company = User.objects.get(username='company1')
-#         self.assertTrue(company.is_company)
+    def test_company_login(self):
+        login = self.client.login(username="company1", password="testpass123")
+        self.assertTrue(login)
+        response = self.client.get(reverse("users:company-profile", kwargs={"username": "company1"}))
+        self.assertEqual(response.status_code, 200)
 
-#     def test_customer_login(self):
-#         self.client.post(reverse('register_customer'), self.customer_data)
-#         login_data = {'email': 'customer1@example.com', 'password': 'Testpassword123'}
-#         response = self.client.post(reverse('login'), login_data)
-#         self.assertEqual(response.status_code, 302)  # Successful login should redirect to customer profile
+    def test_customer_profile_access(self):
+        self.client.login(username="customer1", password="testpass123")
+        response = self.client.get(reverse("users:customer-profile", kwargs={"username": "customer1"}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "customer1")  # Check if profile displays correct username
 
-#     def test_company_login(self):
-#         self.client.post(reverse('register_company'), self.company_data)
-#         login_data = {'email': 'company1@example.com', 'password': 'Testpassword123'}
-#         response = self.client.post(reverse('login'), login_data)
-#         self.assertEqual(response.status_code, 302)  # Successful login should redirect to company profile
-
-#     def test_customer_profile_access(self):
-#         self.client.post(reverse('register_customer'), self.customer_data)
-#         self.client.login(email='customer1@example.com', password='Testpassword123')
-#         response = self.client.get(reverse('customer-profile'))
-#         self.assertEqual(response.status_code, 200)
-
-#     def test_profile_access_without_login(self):
-#         response = self.client.get(reverse('customer-profile'))
-#         self.assertRedirects(response, '/login/?next=/profile/customer/')
+    def test_company_profile_access(self):
+        self.client.login(username="company1", password="testpass123")
+        response = self.client.get(reverse("users:company-profile", kwargs={"username": "company1"}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "company1")  # Check if profile displays correct username

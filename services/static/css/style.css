@@ -93,7 +93,29 @@ button:hover {
   font-size: 70px;
 }
 
-/* ============================================================================================== */
+/* =======================================Pagination================================================== */
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.pagination a {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  color: #333;
+  text-decoration: none;
+}
+
+.pagination a:hover {
+  background-color: #f0f0f0;
+}
+
+.pagination span {
+  padding: 8px 12px;
+}
+
 
 /* ======================================== Navbar ============================================== */
 

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -7,7 +7,7 @@ from django.utils import timezone
 
 from .forms import CustomerSignUpForm, CompanySignUpForm, UserLoginForm
 from .models import User, Company, Customer
-from services.models import ServiceRequest
+from services.models import ServiceRequest, Service
 
 
 def register(request):
@@ -26,7 +26,7 @@ class CustomerSignUpView(CreateView):
     def form_valid(self, form):
         user = form.save()
         login(self.request, user) #login user automatically
-        return redirect('users:customer-profile') 
+        return redirect('users:customer-profile', username=user.username) 
 
 
 class CompanySignUpView(CreateView):
@@ -41,7 +41,7 @@ class CompanySignUpView(CreateView):
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
-        return redirect('users:company-profile') 
+        return redirect('users:company-profile', username=user.username) 
 
 
 def LoginUserView(request):
@@ -86,9 +86,11 @@ def CustomerProfileView(request, username):
 # Company Profile View - Only accessible to logged-in users
 @login_required
 def CompanyProfileView(request, username):
-    company = Company.objects.get(user=request.user)
+    company = get_object_or_404(Company, user__username=username)
+    services = Service.objects.filter(company=company).order_by("-date")
 
     return render(request, 'users/profile.html', {
         'user': request.user,
-        'services': []  # Placeholder for services provided by the company
+        'company': company,
+        'services': services,  # Pass the company's services to the template
     })

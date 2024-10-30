@@ -8,4 +8,16 @@
         <p class="site_title">NetFix</p>
         <img class="home_logo" src="static/css/logo.png" alt="logo">
     </div>
+    {% if top_services %}
+        {% for service in top_services %}
+        <div>
+            <a href="/services/{{service.id}}">{{service.name}}</a> ({{service.field}})
+            <p style="margin: 0; display: inline-block;"> ❱❱ {{service.price_hour}}</p>
+            <p style="float: right; margin: 0;">
+                by <a href="{% url 'users:company-profile' service.company.user %}">{{service.company.user}}</a>
+            </p> 
+        </div>
+        <div class="line"></div>
+        {% endfor %}
+    {% endif %}
 {% endblock %}

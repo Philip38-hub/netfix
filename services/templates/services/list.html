@@ -5,28 +5,36 @@
 {% block content %}
     <p class="title">Services</p>
     {% if user.is_company %}
-        <a class="create_service" href="{% url 'services_create' %}"> Create Service</a>
+        <a class="create_service" href="{% url 'services_create' %}">Create Service</a>
     {% endif %}
-    <!-- <div class='services_list'>
-        {% if services %}
-            {% for service in services.all %}
-            {% endfor %}
-        {% else %}
-            <h2>Sorry No services available yet</h2>
-        {% endif %}
-     </div> -->
-     <div class="services_list">
-        {% if services %}
-            {% for service in services %}
-                <div>
+    
+    <div class="services_list">
+        {% if page_obj %}
+            {% for service in page_obj %}
+                <div style="display: flex; justify-content: space-between;">
                     <h3>{{ service.name }}</h3>
                     <p>{{ service.description }}</p>
                     <p>Price per Hour: {{ service.price_hour }}</p>
                     <p>Field: {{ service.field }}</p>
                 </div>
+                <div class="line"></div>
             {% endfor %}
         {% else %}
             <h2>No services available yet</h2>
+        {% endif %}
+    </div>
+
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">First</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
         {% endif %}
     </div>
 {% endblock %}
